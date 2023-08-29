@@ -1,10 +1,17 @@
-const register = (req, res, next) => {
+const User = require("../models/User");
 
-    console.log(req.body);
+const register = async (req, res, next) => {
+    const {name, email, password} = req.body;
+    // async await 
+    const user = await User.create({
+        name,
+        email,
+        password
+    });
 
     res.status(200).json({
         success: true,
-        message: 'Auth Register Page'
+        data: user
     });
 }
 
