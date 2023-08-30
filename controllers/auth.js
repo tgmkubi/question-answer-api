@@ -1,18 +1,28 @@
 const User = require("../models/User");
 
 const register = async (req, res, next) => {
-    const {name, email, password} = req.body;
-    // async await 
-    const user = await User.create({
-        name,
-        email,
-        password
-    });
 
-    res.status(200).json({
-        success: true,
-        data: user
-    });
+
+    try {
+        const { name, email, password } = req.body;
+        // async await 
+        const user = await User.create({
+            name,
+            email,
+            password
+        });
+
+        res.status(200).json({
+            success: true,
+            data: user
+        });
+    } catch (error) {
+        return next(error);
+    }
 }
 
-module.exports = {register}
+const errorTest = (req, res, next) => {
+    throw new Error('BROKEN ulennn');
+}
+
+module.exports = { register, errorTest };
