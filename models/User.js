@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 const { Schema } = mongoose;
 
 const UserSchema = new Schema({
@@ -14,7 +15,7 @@ const UserSchema = new Schema({
     },
     password: {
         type: String,
-        minlength : [6,"Please provide a valid password with min length 6"],
+        minlength: [6, "Please provide a valid password with min length 6"],
         required: [true, 'Password is required'],
         select: false
     },
@@ -55,6 +56,26 @@ const UserSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Answer'
     }],
+});
+
+// Password Hash
+UserSchema.pre('save', function(next) {
+    if(!this.isModified("password")) {
+        return next();
+    }
+    bcrypt.genSalt(10, (err, salt) => {
+        if (err) {
+            return next(err);
+        }
+        bcrypt.hash(this.password, salt, (err, hash) => {
+            if (err) {
+                return next(err);
+            }
+            // Store hash in your password DB.
+            this.password = hash;
+            next();
+        });
+    });
 });
 
 module.exports = mongoose.model('User', UserSchema);
