@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const asyncErrorWrapper = require('express-async-handler');
+const sendJwtToClient = require('../helpers/authorization/sendJwtToClient');
 
 const register = asyncErrorWrapper(async (req, res, next) => {
     const { name, email, password } = req.body;
@@ -10,10 +11,7 @@ const register = asyncErrorWrapper(async (req, res, next) => {
         password
     });
 
-    res.status(200).json({
-        success: true,
-        data: user
-    });
+    sendJwtToClient(user, res);
 });
 
 module.exports = { register};
