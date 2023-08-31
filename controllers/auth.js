@@ -16,8 +16,4 @@ const register = asyncErrorWrapper(async (req, res, next) => {
     });
 });
 
-const errorTest = (req, res, next) => {
-    return next(new TypeError());
-}
-
-module.exports = { register, errorTest };
+module.exports = { register};
