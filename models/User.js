@@ -10,11 +10,11 @@ const UserSchema = new Schema({
         type: String,
         required: [true, 'Email is required'],
         unique: true,
-        match: [/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/, 'Please provide a valid email']
+        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please provide a valid email']
     },
     password: {
         type: String,
-        min: [6, "Please provide a password with length 6"],
+        minlength : [6,"Please provide a valid password with min length 6"],
         required: [true, 'Password is required'],
         select: false
     },
