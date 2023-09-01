@@ -9,7 +9,7 @@ const sendJwtToClient = (user, res) => {
     { 
         httpOnly: true,
         secure: NODE_ENV === "development" ? false : true,
-        expires: new Date(Date.now() + parseInt(JWT_COOKIE) * 1000),
+        expires: new Date(Date.now() + parseInt(JWT_COOKIE) * 1000 * 60),
         
     })
     .json({
