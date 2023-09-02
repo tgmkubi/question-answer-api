@@ -45,19 +45,39 @@ const login = asyncErrorWrapper(async (req, res, next) => {
 });
 
 const logout = asyncErrorWrapper(async (req, res, next) => {
-    const {JWT_COOKIE,NODE_ENV} = process.env;
+    const { JWT_COOKIE, NODE_ENV } = process.env;
 
     return res.status(200)
-    // .cookie("access_token", null, {
-    //     httpOnly: true,
-    //     expires: new Date(Date.now()),
-    //     secure: NODE_ENV === "development" ? false : true,
-    // })
-    .clearCookie('access_token')
-    .json({
-        success: true,
-        message: "Logout Successfull"
-    })
+        // .cookie("access_token", null, {
+        //     httpOnly: true,
+        //     expires: new Date(Date.now()),
+        //     secure: NODE_ENV === "development" ? false : true,
+        // })
+        .clearCookie('access_token')
+        .json({
+            success: true,
+            message: "Logout Successfull"
+        })
 });
 
-module.exports = { register, getUser, login, logout};
+const imageUpload = asyncErrorWrapper(async (req, res, next) => {
+    // Image Upload Success
+    // res.status(200).json({
+    //     success: true,
+    //     message: "Image upload successfull"
+    // });
+
+    const user = await User.findByIdAndUpdate(req.user.id,{
+        "profile_image" : req.savedProfiledImage
+    },{
+        new: true,
+        runValidators : true
+    });
+    res.status(200)
+    .json({
+        success : true,
+        message : "Image Upload Successful"
+    });
+});
+
+module.exports = { register, getUser, login, logout, imageUpload };
