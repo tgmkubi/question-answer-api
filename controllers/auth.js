@@ -1,6 +1,8 @@
 const User = require("../models/User");
 const asyncErrorWrapper = require('express-async-handler');
-const {sendJwtToClient} = require('../helpers/authorization/tokenHelpers');
+const { sendJwtToClient } = require('../helpers/authorization/tokenHelpers');
+const { validateUserInput, comparePassword } = require('../helpers/input/inputHelpers');
+const CustomError = require('../helpers/error/CustomError');
 
 const register = asyncErrorWrapper(async (req, res, next) => {
     const { name, email, password } = req.body;
@@ -24,4 +26,21 @@ const getUser = (req, res, next) => {
     });
 };
 
-module.exports = { register, getUser};
+const login = asyncErrorWrapper(async (req, res, next) => {
+
+    const { email, password } = req.body;
+
+    if (!validateUserInput(email, password)) {
+        return next(new CustomError("Please check your inputs", 400));
+    };
+
+    const user = await User.findOne({ email }).select("+password");
+
+    if (!comparePassword(password, user.password)) {
+        return next(new CustomError("Please check your credentials", 400));
+    }
+
+    sendJwtToClient(user, res);
+});
+
+module.exports = { register, getUser, login };
