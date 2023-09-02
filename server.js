@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 require('dotenv').config({path: './config/env/config.env'});
 const app = express();
 const PORT = process.env.PORT;
@@ -19,6 +20,8 @@ app.use('/api', routers);
 // Express Default Error Handler
 app.use(customErrorHandler);
 
+// Static Files
+app.use(express.static(path.join(__dirname, "public")));
 
 app.listen(PORT, () => {
   console.log(`App started on ${PORT} : ${process.env.NODE_ENV}`);
