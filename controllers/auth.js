@@ -91,8 +91,7 @@ const forgotPassword = asyncErrorWrapper(async (req, res, next) => {
 
     await user.save();
 
-    const { URL } = process.env.URL;
-    const { PORT } = process.env.PORT;
+    const { URL, PORT } = process.env;
     const resetPaswwordUrl = `${URL}${PORT}/api/auth/resetpassword?resetPasswordToken=${resetPasswordToken}`;
 
     const emailTemplate = `
