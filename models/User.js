@@ -84,7 +84,7 @@ UserSchema.methods.generateJwtFromUser = function () {
     return token;
 };
 
-UserSchema.methods.getResetPasswordFromUser = function () {
+UserSchema.methods.getResetPasswordToken = function () {
     const randomHexString = crypto.randomBytes(15).toString("hex");
     // console.log(randomHexString);
 
