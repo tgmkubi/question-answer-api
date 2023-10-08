@@ -4,6 +4,7 @@ const { sendJwtToClient } = require('../helpers/authorization/tokenHelpers');
 const { validateUserInput, comparePassword } = require('../helpers/input/inputHelpers');
 const CustomError = require('../helpers/error/CustomError');
 const sendEmail = require('../helpers/libraries/sendEmail');
+const uuid4 = require('uuid4');
 
 const register = asyncErrorWrapper(async (req, res, next) => {
     const { name, email, password } = req.body;
@@ -118,4 +119,24 @@ const forgotPassword = asyncErrorWrapper(async (req, res, next) => {
     }
 });
 
-module.exports = { register, getUser, login, logout, imageUpload, forgotPassword};
+const getAllBooks = asyncErrorWrapper(async (req, res, next) => {
+    res.status(200).json({
+        success: true,
+        books: [
+            {
+                id: uuid4(),
+                name: "Harry Potter"
+            },
+            {
+                id: uuid4(),
+                name: "Sefiller"
+            },
+            {
+                id: uuid4(),
+                name: "Fareler ve İnsanlar"
+            }
+        ]
+    })
+});
+
+module.exports = { register, getUser, login, logout, imageUpload, forgotPassword, getAllBooks};
