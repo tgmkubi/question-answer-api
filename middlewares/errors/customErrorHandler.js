@@ -14,6 +14,9 @@ const customErrorHandler = (err, req, res, next) => {
     if(err.code === 11000) {
         customError = new CustomError("Duplicate Key Error", 400);
     }
+    if(err.name === "CastError") {
+        customError = new CustomError("Please provide a valid id", 400);
+    }
 
     res.status(customError.status || 500).json({
         success: false,
