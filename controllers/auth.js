@@ -75,7 +75,7 @@ const imageUpload = asyncErrorWrapper(async (req, res, next) => {
         new: true,
         runValidators: true
     });
-    res.status(200)
+    return res.status(200)
         .json({
             success: true,
             message: "Image Upload Successful"
@@ -142,10 +142,25 @@ const resetPassword = asyncErrorWrapper(async (req, res, next) => {
 
     await user.save();
     
-    res.status(200).json({
+    return res.status(200).json({
         success: true,
         message: "Reset Password Process Successful"
     })
+});
+
+const editUser = asyncErrorWrapper(async (req, res, next) => {
+    const filter = { _id:  req.user.id};
+    const update = req.body;
+    const user = await User.findOneAndUpdate(filter, update, {
+        new: true,
+        runValidators: true
+    });
+
+    return res.status(200).json({
+        success: true,
+        data: user
+    });
+
 });
 
 
@@ -170,4 +185,4 @@ const getAllBooks = asyncErrorWrapper(async (req, res, next) => {
     })
 });
 
-module.exports = { register, getUser, login, logout, imageUpload, forgotPassword, resetPassword, getAllBooks};
+module.exports = { register, getUser, login, logout, imageUpload, forgotPassword, resetPassword, editUser, getAllBooks};
