@@ -26,4 +26,12 @@ const getAllQuestions = asyncErrorWrapper(async (req, res, next) => {
     });
 });
 
-module.exports = { askNewQuestion, getAllQuestions };
+const getSingleQuestion = asyncErrorWrapper(async (req, res, next) => {
+    const question = req.question;
+
+    return res.status(200).json({
+        success: true,
+        data: question
+    });
+});
+module.exports = { askNewQuestion, getAllQuestions, getSingleQuestion };
