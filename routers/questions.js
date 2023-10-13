@@ -1,15 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const {askNewQuestion} = require('../controllers/question');
+const {getAccessToRoute} = require('../middlewares/authorization/auth');
 
-// Controller
-const {getAllQuestions} = require('../controllers/question');
-
-router.get('/', getAllQuestions, (req, res) => {
-    res.status(200).json({
-        success: true,
-        message: 'Questions Home Page'
-    })
-  })
-
+router.post('/ask', getAccessToRoute, askNewQuestion);
 
 module.exports = router;
