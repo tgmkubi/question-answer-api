@@ -3,6 +3,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { Schema } = mongoose;
+const Question = require('./Question');
+const CustomError = require('../helpers/error/CustomError');
 
 const UserSchema = new Schema({
     name: {
@@ -120,5 +122,12 @@ UserSchema.pre('save', function (next) {
         });
     });
 });
+
+UserSchema.post("findOneAndDelete", async function(doc){
+    if(!doc) {
+        return next(new CustomError("Internal Server Error", 500));
+    }
+    await Question.deleteMany({user: doc._id});
+  });
 
 module.exports = mongoose.model('User', UserSchema);
