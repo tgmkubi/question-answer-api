@@ -82,4 +82,22 @@ const likeQuestion = asyncErrorWrapper(async (req, res, next) => {
     });
 });
 
-module.exports = { askNewQuestion, getAllQuestions, getSingleQuestion, editQuestion, deleteQuestion, likeQuestion };
+const undoLikeQuestion = asyncErrorWrapper(async (req, res, next) => {
+    const question = req.question;
+    const userId = req.user.id;
+
+    if(!question.likes.includes(userId)){
+        return next(new CustomError("You can not undo like operation for this question", 400));
+    };
+
+    const index = question.likes.indexOf(userId);
+    question.likes.splice(index, 1);
+    await question.save();
+
+    return res.status(200).json({
+        success: true,
+        data: question
+    });
+});
+
+module.exports = { askNewQuestion, getAllQuestions, getSingleQuestion, editQuestion, deleteQuestion, likeQuestion, undoLikeQuestion };
