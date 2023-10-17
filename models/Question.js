@@ -22,18 +22,22 @@ const QuestionSchema = new Schema({
         type: mongoose.Schema.ObjectId,
         required: true,
         ref: "User"
-    }
+    },
+    likes: [{
+        type: mongoose.Schema.ObjectId,
+        ref: "User"
+    }]
 });
 
 QuestionSchema.pre('save', function (next) {
-    if(!this.isModified("title")) {
+    if (!this.isModified("title")) {
         next();
     }
     this.slug = this.makeSlug();
     next();
 });
 
-QuestionSchema.methods.makeSlug = function() {
+QuestionSchema.methods.makeSlug = function () {
     return slugify(this.title, {
         replacement: '-',  // replace spaces with replacement character, defaults to `-`
         remove: /[*+~.()'"!:@]/g, // remove characters that match regex, defaults to `undefined`
@@ -41,7 +45,7 @@ QuestionSchema.methods.makeSlug = function() {
         strict: false,     // strip special characters except replacement, defaults to `false`
         locale: 'vi',      // language code of the locale to use
         trim: true         // trim leading and trailing replacement chars, defaults to `true`
-      })
+    })
 };
 
 module.exports = mongoose.model('Question', QuestionSchema);
