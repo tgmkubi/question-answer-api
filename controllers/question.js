@@ -63,4 +63,23 @@ const deleteQuestion = asyncErrorWrapper(async (req, res, next) => {
     });
 });
 
-module.exports = { askNewQuestion, getAllQuestions, getSingleQuestion, editQuestion, deleteQuestion };
+const likeQuestion = asyncErrorWrapper(async (req, res, next) => {
+    // const {id} = req.params;
+    // const question = await Question.findById(id);
+    const question = req.question;
+    const userId = req.user.id;
+
+    if(question.likes.includes(userId)){
+        return next(new CustomError("You already liked this question", 400));
+    };
+
+    question.likes.push(userId);
+    await question.save();
+
+    return res.status(200).json({
+        success: true,
+        data: question
+    });
+});
+
+module.exports = { askNewQuestion, getAllQuestions, getSingleQuestion, editQuestion, deleteQuestion, likeQuestion };
