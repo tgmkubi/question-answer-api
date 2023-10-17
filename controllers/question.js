@@ -34,4 +34,22 @@ const getSingleQuestion = asyncErrorWrapper(async (req, res, next) => {
         data: question
     });
 });
-module.exports = { askNewQuestion, getAllQuestions, getSingleQuestion };
+
+const editQuestion = asyncErrorWrapper(async (req, res, next) => {
+    const {id} = req.params;
+    const {title, content} = req.body;
+
+    let question = await Question.findById(id);
+
+    question.title = title;
+    question.content = content;
+    
+    question = await question.save();
+
+    return res.status(200).json({
+        success: true,
+        data: question
+    });
+});
+
+module.exports = { askNewQuestion, getAllQuestions, getSingleQuestion, editQuestion };
