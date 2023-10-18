@@ -15,8 +15,8 @@ const checkUserExist = asyncErrorWrapper(async(req, res, next) => {
 });
 
 const checkQuestionExist = asyncErrorWrapper(async(req, res, next) => {
-    const {id} = req.params;
-    const question = await Question.findById({_id: id});
+    const question_id = req.params.id || req.params.question_id;
+    const question = await Question.findById({_id: question_id});
 
     if(!question) {
         return next(new CustomError("There is no such question with that id"));
