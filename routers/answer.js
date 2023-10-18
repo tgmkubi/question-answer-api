@@ -1,11 +1,7 @@
 const express = require('express');
 const router = express.Router({mergeParams: true});
+const {addNewAnswerToQuestion} = require('../controllers/answer');
+const {getAccessToRoute} = require('../middlewares/authorization/auth');
 
-router.get("", (req, res, next) => {
-    console.log(req.params.question_id);
-    res.status(200).json({
-        success: true,
-        message: "Answers Page"
-    })
-})
+router.post("/", getAccessToRoute, addNewAnswerToQuestion);
 module.exports = router;

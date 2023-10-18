@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const Question = require('./Question');
 
 const AnswerSchema = new Schema({
     content: {
@@ -13,8 +14,8 @@ const AnswerSchema = new Schema({
     },
     user: {
         type: mongoose.Schema.ObjectId,
-        required: true,
-        ref: "User"
+        ref: "User",
+        required: true
     },
     question: {
         type: mongoose.Schema.ObjectId,
@@ -25,6 +26,20 @@ const AnswerSchema = new Schema({
         ref: "User"
     }],
     
+});
+
+AnswerSchema.pre('save', async function (next) {
+    if(!this.isModified("user")) {
+        return next();
+    }
+    try {
+        const question = await Question.findById(this.question);
+        question.answers.push(this._id);
+        await question.save();
+        next();
+    } catch (error) {
+        return next(err);
+    };
 });
 
 module.exports = mongoose.model('Answer', AnswerSchema);
