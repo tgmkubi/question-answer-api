@@ -25,11 +25,11 @@ const AnswerSchema = new Schema({
         type: mongoose.Schema.ObjectId,
         ref: "User"
     }],
-    
+
 });
 
 AnswerSchema.pre('save', async function (next) {
-    if(!this.isModified("user")) {
+    if (!this.isModified("user")) {
         return next();
     }
     try {
