@@ -1,12 +1,19 @@
 const express = require('express');
 const router = express.Router();
+const questionQueryMiddleware = require('../middlewares/query/questionQueryMiddleware');
 const { askNewQuestion, getAllQuestions, getSingleQuestion, editQuestion, deleteQuestion, likeQuestion, undoLikeQuestion } = require('../controllers/question');
 const { getAccessToRoute, getQuestionOwnerAccess } = require('../middlewares/authorization/auth');
 const { checkQuestionExist } = require('../middlewares/database/databaseErrorHelpers');
 const answer = require('./answer');
+const Question = require('../models/Question');
 
 router.post('/ask', getAccessToRoute, askNewQuestion);
-router.get('/', getAllQuestions);
+router.get('/', questionQueryMiddleware(Question, {
+    population: {
+        path: "user",
+        select: "name email profile_image"
+    }
+}), getAllQuestions);
 router.get('/:id', checkQuestionExist, getSingleQuestion);
 router.put('/:id/edit', [getAccessToRoute, checkQuestionExist, getQuestionOwnerAccess], editQuestion);
 router.delete('/:id/delete', [getAccessToRoute, checkQuestionExist, getQuestionOwnerAccess], deleteQuestion);
