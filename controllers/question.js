@@ -23,7 +23,7 @@ const getAllQuestions = asyncErrorWrapper(async (req, res, next) => {
     const populate = true;
     const populateObject = {
         path: "user",
-        select: "name email profile_image"
+        select: "name email profile_image",
     };
 
     if(req.query.search) {
@@ -34,15 +34,41 @@ const getAllQuestions = asyncErrorWrapper(async (req, res, next) => {
         query = query.where(searchObject);
     };
 
+    //Populate
     if(populate) {
         query = query.populate(populateObject);
     };
+    //Pagination
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+
+    const pagination = {};
+    const total = await Question.countDocuments();
+
+    if (startIndex > 0) {
+        pagination.previous = {
+            page: page - 1,
+            limit: limit,
+        };
+    };
+    if (endIndex < total) {
+        pagination.next = {
+            page: page + 1,
+            limit: limit,
+        };
+    }
+    query = query.skip(startIndex).limit(limit);
+
 
     const questions = await query;
 
     return res.status(200).json({
         success: true,
-        data: questions
+        count: questions.length,
+        pagination: pagination,
+        data: questions,
     });
 });
 
