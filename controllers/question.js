@@ -22,12 +22,14 @@ const getAllQuestions = asyncErrorWrapper(async (req, res, next) => {
 });
 
 const getSingleQuestion = asyncErrorWrapper(async (req, res, next) => {
-    const question = req.question;
+    // const question = req.question;
 
-    return res.status(200).json({
-        success: true,
-        data: question
-    });
+    // return res.status(200).json({
+    //     success: true,
+    //     data: question
+    // });
+
+    return res.status(200).json(res.queryResults);
 });
 
 const editQuestion = asyncErrorWrapper(async (req, res, next) => {
