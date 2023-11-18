@@ -120,6 +120,8 @@ const likeQuestion = asyncErrorWrapper(async (req, res, next) => {
     };
 
     question.likes.push(userId);
+    question.likeCount = question.likes.length;
+
     await question.save();
 
     return res.status(200).json({
@@ -138,6 +140,8 @@ const undoLikeQuestion = asyncErrorWrapper(async (req, res, next) => {
 
     const index = question.likes.indexOf(userId);
     question.likes.splice(index, 1);
+    question.likeCount = question.likes.length;
+
     await question.save();
 
     return res.status(200).json({
