@@ -38,6 +38,7 @@ const getAllQuestions = asyncErrorWrapper(async (req, res, next) => {
     if(populate) {
         query = query.populate(populateObject);
     };
+    
     //Pagination
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 5;
@@ -60,6 +61,16 @@ const getAllQuestions = asyncErrorWrapper(async (req, res, next) => {
         };
     }
     query = query.skip(startIndex).limit(limit);
+
+    //Sorting: req.query.sortBy most-answered most-liked
+    const sortKey = req.query.sortBy;
+    if(sortKey === "most-answered") {
+        query = query.sort("-answerCount -createdAt"); // büyükten küçüğe sıralama
+    } else if(sortKey === "most-liked" ) {
+        query = query.sort("-likeCount -createdAt");
+    } else {
+        query = query.sort("-createdAt");
+    }
 
 
     const questions = await query;
