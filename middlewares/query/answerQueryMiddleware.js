@@ -14,6 +14,7 @@ const answerQueryMiddleware = function (model, options) {
         queryObject[arrayName] = { $slice: [startIndex, limit] };
         let query = model.find({ _id: id }, queryObject);
 
+        //Populate
         query = populateHelper(query, options.population);
 
         const queryResults = await query;
